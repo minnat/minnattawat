@@ -1,0 +1,81 @@
+---
+import { site, nav } from '../data/site';
+// Evaluated during `npm run build`, so it refreshes on every deploy.
+const year = new Date().getFullYear();
+---
+
+<footer class="ft">
+  <div class="shell ft__inner">
+    <div class="ft__brand">
+      <p class="ft__mark">{site.shortName}<span aria-hidden="true">.</span></p>
+      <p class="ft__line">
+        {site.role} · {site.location}
+      </p>
+      <p class="ft__line ft__line--dim">
+        Taking on new projects. Also open to the right permanent role.
+      </p>
+    </div>
+
+    <nav class="ft__nav" aria-label="Footer">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      <a href="#hiring">CV</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <ul class="ft__links">
+      {site.instagram && (
+        <li><a href={site.instagram} target="_blank" rel="noopener">Instagram</a></li>
+      )}
+      <li><a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href={site.github} target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://whereto.party" target="_blank" rel="noopener">whereto.party</a></li>
+    </ul>
+  </div>
+
+  <div class="shell ft__base">
+    <p class="mono">© {year} {site.shortName}</p>
+    <p class="mono">Built with love</p>
+  </div>
+</footer>
+
+<style>
+  .ft { background: var(--ink); color: var(--paper-pale); padding-block: clamp(3rem, 6vw, 4.5rem) 2rem; }
+
+  .ft__inner { display: grid; gap: 2.5rem; }
+
+  .ft__mark {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 2rem;
+    letter-spacing: -0.04em;
+    margin-bottom: 0.9rem;
+  }
+  .ft__mark span { color: var(--orange); }
+  .ft__line { color: var(--on-ink); font-size: 0.94rem; line-height: 1.6; max-width: 34ch; }
+  .ft__line--dim { color: var(--on-ink-faint); margin-top: 0.4rem; }
+
+  .ft__nav, .ft__links { display: grid; gap: 0.6rem; align-content: start; }
+  .ft__nav a, .ft__links a {
+    font-size: 0.95rem;
+    color: var(--on-ink);
+    justify-self: start;
+    transition: color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .ft__nav a:hover, .ft__links a:hover { color: var(--paper-pale); box-shadow: inset 0 -1px 0 var(--orange); }
+
+  .ft__base {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    justify-content: space-between;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid #5C3A26;
+    color: var(--on-ink-faint);
+    letter-spacing: 0.1em;
+  }
+
+  @media (min-width: 760px) {
+    .ft__inner { grid-template-columns: 1.6fr 1fr 1fr; gap: 3rem; }
+  }
+</style>

@@ -1,0 +1,156 @@
+---
+import { nav, site } from '../data/site';
+---
+
+<header class="hd" data-header>
+  <div class="hd__inner shell">
+    <a href="#top" class="hd__mark" aria-label={`${site.name} — back to top`}>
+      <span class="hd__marktext">{site.shortName}</span>
+      <span class="hd__markdot" aria-hidden="true"></span>
+    </a>
+
+    <nav class="hd__nav" aria-label="Sections">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <div class="hd__end">
+      <a href="#contact" class="btn btn--sm">Get in touch</a>
+      <button class="hd__burger" data-menu-toggle aria-expanded="false" aria-controls="menu">
+        <span class="sr">Menu</span>
+        <span class="hd__bars" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="hd__panel" id="menu" data-menu hidden>
+    <nav aria-label="Sections">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      <a href="#hiring">If you're hiring</a>
+      <a href="#contact">Get in touch</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hd {
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hd.is-stuck {
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 var(--edge) 0 var(--ink);
+  }
+
+  .hd__inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 1rem;
+  }
+
+  .hd__mark {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.035em;
+    margin-right: auto;
+  }
+  .hd__markdot {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: var(--orange);
+    transition: background 0.3s ease;
+  }
+  .hd__mark:hover .hd__markdot { background: var(--jade); }
+
+  .hd__nav { display: none; gap: 1.9rem; }
+  .hd__nav a {
+    font-size: 0.94rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    position: relative;
+    padding-block: 0.35rem;
+    transition: color 0.2s ease;
+  }
+  .hd__nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--edge);
+    background: var(--orange);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .hd__nav a:hover { color: var(--ink); }
+  .hd__nav a:hover::after,
+  .hd__nav a.is-current::after { transform: scaleX(1); }
+  .hd__nav a.is-current { color: var(--ink); }
+
+  .hd__end { display: flex; align-items: center; gap: 0.75rem; }
+
+  .btn--sm {
+    display: none;
+    padding: 0.6rem 1.15rem;
+    font-size: 0.9rem;
+    --misreg: 4px;
+    box-shadow: 4px 4px 0 var(--orange);
+  }
+
+  .hd__burger {
+    width: 2.9rem;
+    height: 2.9rem;
+    display: grid;
+    place-items: center;
+    background: var(--paper-pale);
+    border: var(--edge) solid var(--ink);
+    border-radius: var(--r);
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--grape);
+  }
+  .hd__bars { display: grid; gap: 5px; }
+  .hd__bars i { display: block; width: 18px; height: 2px; background: var(--ink); transition: transform 0.25s ease; }
+  .hd__burger[aria-expanded='true'] .hd__bars i:first-child { transform: translateY(3.5px) rotate(45deg); }
+  .hd__burger[aria-expanded='true'] .hd__bars i:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+
+  .hd__panel {
+    background: var(--paper-deep);
+    border-block: var(--edge) solid var(--ink);
+    padding: 1.25rem var(--gutter) 2rem;
+  }
+  .hd__panel nav { display: grid; gap: 0.25rem; }
+  .hd__panel a {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: -0.03em;
+    padding-block: 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+  .hd__panel a:last-child { border-bottom: 0; color: var(--orange-text); }
+
+  .sr {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (min-width: 900px) {
+    .hd__nav { display: flex; }
+    .btn--sm { display: inline-flex; }
+    .hd__burger { display: none; }
+    .hd__panel { display: none; }
+  }
+</style>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Min Nattawat">
+  <!-- The site's signature reduced to two plates so it survives 16px: a grape
+       under-plate printed slightly out of register beneath the orange one,
+       with the M knocked out in paper. Composition is centred on 16,16. -->
+  <rect x="5.5" y="5.5" width="25" height="25" rx="7" fill="#7A4AC7"/>
+  <rect x="1.5" y="1.5" width="25" height="25" rx="7" fill="#E2571F"/>
+  <path d="M7.1 19.4 V8.6 L14 15.4 L20.9 8.6 V19.4"
+        fill="none" stroke="#FFF1E0" stroke-width="3.6"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

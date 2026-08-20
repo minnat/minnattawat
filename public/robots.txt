@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# The CV carries contact details that are deliberately kept off the site itself.
+# Anyone can still open it from the page; this only stops it being indexed.
+Disallow: /nattawat-choojirawong-cv.pdf
+
+Sitemap: https://minnattawat.com/sitemap.xml

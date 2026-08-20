@@ -1,0 +1,26 @@
+{
+  "name": "minnattawat",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal site for Min Nattawat \u2014 websites, built start to finish.",
+  "author": "Nattawat Choojirawong",
+  "license": "UNLICENSED",
+  "homepage": "https://minnattawat.com",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^7.2.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,137 @@
+---
+import { site, history, stack, experienceYearsWord } from '../data/site';
+---
+
+<section class="band ab" id="about">
+  <div class="shell">
+    <p class="eyebrow">Who you would actually be dealing with</p>
+
+    <div class="ab__top">
+      <div class="ab__portrait">
+        {site.headshot ? (
+          <img class="ab__img" src={site.headshot} alt={site.name} width="1000" height="1153" loading="lazy" />
+        ) : (
+          <div class="ab__img ab__img--empty" role="img" aria-label="Photo of Nattawat Choojirawong">
+            <span class="mono">Photo</span>
+          </div>
+        )}
+        <p class="ab__cap mono">{site.location} · happy to work with you wherever you are</p>
+      </div>
+
+      <div class="ab__copy">
+        <h2 class="ab__h2">Hello — I'm {site.firstName}.</h2>
+
+        <p class="ab__p">
+          I've been building software for {experienceYearsWord} years. Most of that was for a company in
+          California, making things for their customers — and then looking after those things
+          once real people were using them every day. That second part is what teaches you
+          how to build properly.
+        </p>
+        <p class="ab__p">
+          I helped build a <strong>payments company that got bought</strong> in 2022. I worked
+          directly with <strong>Thailand's financial regulator</strong> on an approval nobody had
+          been granted before, sitting in the room explaining it to them. I <strong>ran a team of
+          eleven</strong> at a company that keeps large amounts of digital money safe.
+        </p>
+        <p class="ab__p">
+          You don't need to care about any of that. It just means that when you ask me whether
+          something is possible, or how long it takes, or what could go wrong — the answer
+          comes from having done it before rather than guessing.
+        </p>
+
+        <ul class="ab__hist">
+          {history.map((h) => (
+            <li>
+              <span class="ab__period mono">{h.period}</span>
+              <div>
+                <p class="ab__org"><strong>{h.org}</strong> — {h.role}</p>
+                <p class="ab__note">{h.note}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="ab__ticker" aria-hidden="true">
+    <div class="ab__track">
+      {[0, 1].map(() => (
+        <ul class="ab__stack">
+          {stack.map((s) => <li>{s}</li>)}
+        </ul>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* The ticker closes the band edge-to-edge, so no trailing padding under it. */
+  .ab { padding-bottom: 0; }
+
+  .ab__top { display: grid; gap: clamp(2.5rem, 5vw, 4rem); align-items: start; }
+
+  .ab__portrait { display: grid; gap: 0.9rem; }
+  .ab__img {
+    width: 100%;
+    /* The width/height attributes on the <img> set presentational width AND
+       height. Without height:auto the attribute height stays definite, which
+       makes aspect-ratio a no-op (it only fills an auto dimension) and lets
+       object-fit crop the photo into whatever box the attributes imply. */
+    height: auto;
+    aspect-ratio: 13 / 15;
+    object-fit: cover;
+    border: var(--edge) solid var(--ink);
+    border-radius: var(--r);
+    box-shadow: var(--misreg) var(--misreg) 0 var(--jade);
+  }
+  .ab__img--empty {
+    display: grid;
+    place-items: center;
+    background:
+      repeating-linear-gradient(45deg, var(--paper-deep) 0 12px, var(--paper-pale) 12px 24px);
+    color: var(--ink-faint);
+    letter-spacing: 0.25em;
+  }
+  .ab__cap { color: var(--ink-faint); letter-spacing: 0.1em; line-height: 1.6; }
+
+  .ab__h2 { font-size: var(--t-h1); margin-bottom: 1.75rem; }
+  .ab__p { color: var(--ink-soft); font-size: var(--t-lead); line-height: 1.66; margin-bottom: 1.25rem; max-width: 60ch; }
+  .ab__p strong { color: var(--ink); font-weight: 700; }
+
+  .ab__hist { margin-top: 2.75rem; border-top: var(--edge) solid var(--ink); }
+  .ab__hist li {
+    display: grid;
+    gap: 0.4rem;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  }
+  .ab__period { color: var(--orange-text); letter-spacing: 0.12em; white-space: nowrap; }
+  .ab__org { font-size: 1rem; }
+  .ab__org strong { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; }
+  .ab__note { color: var(--ink-soft); font-size: 0.93rem; line-height: 1.6; margin-top: 0.15rem; }
+
+  /* stack ticker */
+  .ab__ticker { margin-top: clamp(3.5rem, 7vw, 5.5rem); border-block: var(--edge) solid var(--ink); background: var(--paper-deep); overflow: hidden; padding-block: 0.9rem; }
+  .ab__track { display: flex; width: max-content; animation: slide 46s linear infinite; }
+  .ab__stack { display: flex; gap: 2.25rem; padding-right: 2.25rem; }
+  .ab__stack li {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 2.25rem;
+  }
+  .ab__stack li::after { content: '◆'; font-size: 0.5rem; color: var(--orange); }
+  @keyframes slide { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+  @media (prefers-reduced-motion: reduce) { .ab__track { animation: none; } }
+
+  @media (min-width: 900px) {
+    .ab__top { grid-template-columns: 0.85fr 1.15fr; gap: clamp(3rem, 6vw, 5rem); }
+    .ab__portrait { position: sticky; top: 6rem; }
+    .ab__hist li { grid-template-columns: 8.5rem 1fr; gap: 1.5rem; align-items: baseline; }
+  }
+</style>

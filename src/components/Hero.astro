@@ -1,0 +1,260 @@
+---
+import { experienceYears } from '../data/site';
+
+/**
+ * The thesis: making something involves three stages, and one person does all
+ * of them. The plates sit slightly out of register and drift apart on scroll.
+ *
+ * Nothing in here is written for a technical reader — no code, no jargon.
+ */
+---
+
+<section class="hero" id="top">
+  <div class="hero__grid shell">
+    <div class="hero__copy">
+      <p class="hero__status">
+        <span class="hero__pulse" aria-hidden="true"></span>
+        Taking on new projects
+      </p>
+
+      <h1 class="hero__h1">
+        I build<br />
+        <span class="hero__accent">websites.</span>
+      </h1>
+
+      <p class="hero__lead">
+        Somewhere customers can find you, a way to take bookings, an online shop — or
+        something built just for you, because nothing you can buy quite fits. I do the
+        whole of it myself: how it looks, how it works, and getting it online. You
+        don't need to understand any of the technical part.
+      </p>
+
+      <div class="hero__cta">
+        <a href="#contact" class="btn">Tell me your idea</a>
+        <a href="#work" class="btn btn--ghost">See something I made</a>
+      </div>
+
+      <p class="hero__foot mono">
+        {experienceYears} years building software · Based in Bangkok
+      </p>
+    </div>
+
+    <div class="hero__stack" data-parallax-group aria-hidden="true">
+      <!-- Design -->
+      <div class="pl pl--design" data-parallax="0.022">
+        <span class="pl__tag pl__tag--orange">Design</span>
+        <div class="pl__body">
+          <div class="ui">
+            <div class="ui__bar"><i></i><i></i><i></i></div>
+            <div class="ui__hero"></div>
+            <div class="ui__rows">
+              <div class="ui__row"><span class="ui__thumb"></span><span class="ui__lines"><b></b><b></b></span></div>
+              <div class="ui__row"><span class="ui__thumb ui__thumb--b"></span><span class="ui__lines"><b></b><b></b></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Build -->
+      <div class="pl pl--build" data-parallax="0">
+        <span class="pl__tag pl__tag--grape">Build</span>
+        <div class="pl__body">
+          <ul class="does">
+            <li><span class="does__tick"></span>Customers can book a time</li>
+            <li><span class="does__tick"></span>Payments land in your account</li>
+            <li><span class="does__tick"></span>You get an email when they do</li>
+            <li><span class="does__tick"></span>Works the same on a phone</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Launch -->
+      <div class="pl pl--launch" data-parallax="-0.022">
+        <span class="pl__tag pl__tag--jade">Launch</span>
+        <div class="pl__body">
+          <p class="live"><span class="live__dot"></span>yourbusiness.com <em>is live</em></p>
+          <p class="live__sub">Secure · backed up · in your name</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__rule" aria-hidden="true"></div>
+</section>
+
+<style>
+  .hero { position: relative; padding-block: clamp(2rem, 4vw, 3.5rem) clamp(4rem, 9vw, 7rem); }
+  .hero__grid { display: grid; gap: clamp(3rem, 6vw, 4.5rem); align-items: center; }
+
+  .hero__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--mono);
+    font-size: var(--t-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--paper-pale);
+    border: var(--edge) solid var(--ink);
+    border-radius: 100px;
+    padding: 0.4rem 0.9rem 0.4rem 0.75rem;
+    margin-bottom: 1.6rem;
+  }
+  .hero__pulse {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--jade);
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--jade) 65%, transparent); }
+    70%  { box-shadow: 0 0 0 9px color-mix(in srgb, var(--jade) 0%, transparent); }
+    100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--jade) 0%, transparent); }
+  }
+
+  .hero__h1 {
+    font-size: var(--t-mega);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 1.7rem;
+  }
+
+  /* The accent word is printed as its own plate, slightly out of register —
+     the same idea the stack demonstrates, at the scale of one word. Painted
+     with background + offset shadow rather than a z-index:-1 pseudo element,
+     which any stacking context on an ancestor would hide. */
+  .hero__accent {
+    display: inline-block;
+    color: var(--paper-pale);
+    background: var(--orange);
+    border-radius: 4px;
+    padding: 0.01em 0.1em 0.06em;
+    box-shadow: 6px 6px 0 var(--grape);
+  }
+
+  .hero__lead { font-size: var(--t-lead); line-height: 1.55; color: var(--ink-soft); max-width: 46ch; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-top: 2.4rem; }
+  .hero__foot { margin-top: 2.4rem; color: var(--ink-faint); letter-spacing: 0.08em; }
+
+  /* --- the stack --- */
+  .hero__stack {
+    position: relative;
+    display: grid;
+    justify-items: stretch;
+    gap: 2.35rem;
+    padding-block: 1rem;
+  }
+
+  .pl {
+    position: relative;
+    background: var(--paper-pale);
+    border: var(--edge) solid var(--ink);
+    border-radius: var(--r);
+    will-change: transform;
+    box-shadow: var(--misreg) var(--misreg) 0 var(--pl-plate, var(--orange));
+  }
+  .pl--design { --pl-plate: var(--orange); }
+  .pl--build  { --pl-plate: var(--grape); }
+  .pl--launch { --pl-plate: var(--jade); }
+
+  .pl__tag {
+    position: absolute;
+    top: -0.72rem;
+    left: 1.1rem;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border: var(--edge) solid var(--ink);
+    border-radius: 100px;
+    color: var(--paper-pale);
+  }
+  .pl__tag--orange { background: var(--orange-text); }
+  .pl__tag--grape  { background: var(--grape-text); }
+  .pl__tag--jade   { background: var(--jade-text); }
+
+  .pl__body { padding: 1.5rem 1.15rem 1.15rem; }
+
+  /* design plate — a website, sketched */
+  .ui { display: grid; gap: 0.6rem; }
+  .ui__bar { display: flex; gap: 0.3rem; }
+  .ui__bar i { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--ink-faint); opacity: 0.45; }
+  .ui__bar i:first-child { background: var(--orange); opacity: 1; }
+  .ui__hero { height: 3.4rem; border-radius: 3px; background: linear-gradient(105deg, var(--orange) 0%, #F2A03C 100%); }
+  .ui__rows { display: grid; gap: 0.5rem; }
+  .ui__row { display: flex; gap: 0.55rem; align-items: center; }
+  .ui__thumb { width: 1.8rem; height: 1.8rem; border-radius: 3px; background: var(--grape-wash); border: 1px solid var(--ink-faint); flex: none; }
+  .ui__thumb--b { background: var(--jade-wash); }
+  .ui__lines { display: grid; gap: 0.3rem; flex: 1; }
+  .ui__lines b { display: block; height: 0.4rem; border-radius: 2px; background: color-mix(in srgb, var(--ink) 16%, transparent); }
+  .ui__lines b:last-child { width: 58%; background: color-mix(in srgb, var(--ink) 9%, transparent); }
+
+  /* build plate — what it does, in plain words */
+  .does { display: grid; gap: 0.62rem; }
+  .does li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.83rem;
+    color: var(--ink-soft);
+    line-height: 1.35;
+  }
+  .does__tick {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 4px;
+    background: var(--grape);
+    border: 1.5px solid var(--ink);
+    flex: none;
+    position: relative;
+  }
+  .does__tick::after {
+    content: '';
+    position: absolute;
+    left: 0.26rem;
+    top: 0.1rem;
+    width: 0.24rem;
+    height: 0.46rem;
+    border: solid var(--paper-pale);
+    border-width: 0 2px 2px 0;
+    transform: rotate(42deg);
+  }
+
+  /* launch plate — it's online */
+  .live {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .live em { font-style: normal; color: var(--jade-text); }
+  .live__dot {
+    width: 0.62rem; height: 0.62rem; border-radius: 50%;
+    background: var(--jade); border: 1.5px solid var(--ink); flex: none;
+  }
+  .live__sub { margin-top: 0.55rem; font-size: 0.78rem; color: var(--ink-faint); }
+
+  .hero__rule {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: var(--edge);
+    background: var(--ink);
+    opacity: 0.12;
+  }
+
+  @media (min-width: 900px) {
+    .hero__grid { grid-template-columns: 1.05fr 0.95fr; gap: clamp(3rem, 6vw, 6rem); }
+    .hero__stack { padding-block: 2rem; }
+    .pl--design { margin-right: 3.5rem; }
+    .pl--build  { margin-left: 3rem; }
+    .pl--launch { margin-right: 5rem; }
+  }
+</style>

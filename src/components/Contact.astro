@@ -1,0 +1,259 @@
+---
+import { site } from '../data/site';
+
+const configured = site.web3formsKey.length > 0;
+
+// "https://instagram.com/handle/" -> "@handle"
+const instagramHandle = site.instagram
+  ? '@' + site.instagram.replace(/\/+$/, '').split('/').pop()
+  : '';
+---
+
+<section class="band band--deep ct" id="contact">
+  <div class="shell">
+    <p class="eyebrow">Get in touch</p>
+
+    <div class="ct__grid">
+      <div class="ct__intro">
+        <h2 class="ct__h2">Tell me what you have in mind.</h2>
+        <p class="lead">
+          A couple of sentences is plenty. You don't need to have it figured out, and you
+          don't need to use the right words for anything. I read every message myself and
+          reply within a day or two.
+        </p>
+
+        <ul class="ct__direct">
+          {site.instagram && (
+            <li>
+              <span class="mono">Instagram</span>
+              <a class="tlink" href={site.instagram} target="_blank" rel="noopener">
+                {instagramHandle}
+              </a>
+            </li>
+          )}
+          <li>
+            <span class="mono">LinkedIn</span>
+            <a class="tlink" href={site.linkedin} target="_blank" rel="noopener">minnattawat</a>
+          </li>
+          <li>
+            <span class="mono">GitHub</span>
+            <a class="tlink" href={site.github} target="_blank" rel="noopener">minnat</a>
+          </li>
+        </ul>
+
+        <p class="ct__promise">
+          No newsletter, no automated follow-ups, and I won't pass your idea to anyone.
+          Your message goes straight to my inbox and stops there.
+        </p>
+      </div>
+
+      <div class="ct__formwrap plate plate--orange">
+        {!configured && (
+          <p class="ct__warn">
+            <strong>Not connected yet.</strong> Add your Web3Forms access key to
+            <code>src/data/site.ts</code> and this form will start delivering to your inbox.
+          </p>
+        )}
+
+        <form
+          class="ct__form"
+          data-contact
+          action="https://api.web3forms.com/submit"
+          method="POST"
+        >
+          <input type="hidden" name="access_key" value={site.web3formsKey} />
+          <input type="hidden" name="subject" value="New project enquiry via your website" />
+          <input type="hidden" name="from_name" value="minnattawat.com" />
+          <!-- Honeypot: a real person never fills this in. -->
+          <input
+            type="checkbox"
+            name="botcheck"
+            class="ct__hp"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+          />
+
+          <div class="ct__field">
+            <label for="cf-name">Your name</label>
+            <input id="cf-name" name="name" type="text" required autocomplete="name" placeholder="John Somebody" />
+          </div>
+
+          <div class="ct__field">
+            <label for="cf-email">Email</label>
+            <input id="cf-email" name="email" type="email" required autocomplete="email" placeholder="john@company.com" />
+          </div>
+
+          <div class="ct__field">
+            <label for="cf-stage">How far along are you?</label>
+            <select id="cf-stage" name="stage">
+              <option value="Just an idea">Just an idea so far</option>
+              <option value="Idea and some notes">I've written some notes down</option>
+              <option value="Designs or drawings exist">There are designs or drawings</option>
+              <option value="Something exists already">Something exists but needs work</option>
+              <option value="Not sure yet">Honestly not sure yet</option>
+            </select>
+          </div>
+
+          <div class="ct__field">
+            <label for="cf-message">What do you have in mind?</label>
+            <textarea
+              id="cf-message"
+              name="message"
+              rows="5"
+              required
+              placeholder="What you want it to do, who it's for, and anything that already exists. Rough is completely fine."
+            ></textarea>
+          </div>
+
+          <button class="btn ct__submit" type="submit" disabled={!configured}>
+            <span data-label>Send it to me</span>
+          </button>
+
+          <p class="ct__status" data-status role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact]');
+
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const label = button.querySelector<HTMLElement>('[data-label]')!;
+    const original = label.textContent ?? 'Send it to me';
+
+    const setStatus = (message: string, tone: 'ok' | 'bad' | '') => {
+      status.textContent = message;
+      status.dataset.tone = tone;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      // Without JS the form posts natively to Web3Forms, which is a fine fallback.
+      event.preventDefault();
+
+      if (!form.reportValidity()) return;
+
+      button.disabled = true;
+      label.textContent = 'Sending…';
+      setStatus('', '');
+
+      const payload = Object.fromEntries(new FormData(form).entries());
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json().catch(() => ({}));
+
+        if (response.ok && result.success) {
+          form.reset();
+          label.textContent = 'Sent';
+          setStatus('Got it — I’ll get back to you within a day or two.', 'ok');
+          return;
+        }
+        throw new Error(result.message || `Form service returned ${response.status}.`);
+      } catch (error) {
+        label.textContent = original;
+        button.disabled = false;
+        // The upstream text is for whoever maintains the site, not the visitor —
+        // they get one clear instruction and a route that always works.
+        console.error('[contact]', error);
+        setStatus(
+          'That didn’t send — please try again in a moment. If it keeps failing, message me on LinkedIn and I’ll pick it up there.',
+          'bad',
+        );
+      }
+    });
+  }
+</script>
+
+<style>
+  .ct__grid { display: grid; gap: clamp(2.5rem, 5vw, 4rem); align-items: start; }
+
+  .ct__h2 { font-size: var(--t-h1); margin-bottom: 1.5rem; }
+
+  .ct__direct { margin-top: 2.5rem; display: grid; gap: 1rem; }
+  .ct__direct li { display: grid; gap: 0.15rem; }
+  .ct__direct .mono { color: var(--ink-faint); letter-spacing: 0.16em; }
+  .ct__direct a { font-size: 1.05rem; align-self: start; justify-self: start; }
+
+  .ct__promise {
+    margin-top: 2.25rem;
+    font-size: 0.9rem;
+    color: var(--ink-faint);
+    line-height: 1.6;
+    max-width: 42ch;
+  }
+
+  /* --- form --- */
+  .ct__formwrap { padding: clamp(1.5rem, 3.5vw, 2.25rem); }
+
+  .ct__warn {
+    background: var(--orange-wash);
+    border: var(--edge) solid var(--orange);
+    border-radius: var(--r);
+    padding: 0.9rem 1rem;
+    font-size: 0.87rem;
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+  }
+  .ct__warn code { font-family: var(--mono); font-size: 0.8em; background: #fff; padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+  .ct__form { display: grid; gap: 1.15rem; }
+  .ct__hp { position: absolute; left: -9999px; opacity: 0; }
+
+  .ct__field { display: grid; gap: 0.45rem; }
+  .ct__field label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .ct__field input,
+  .ct__field select,
+  .ct__field textarea {
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    background: var(--paper-pale);
+    border: var(--edge) solid var(--ink);
+    border-radius: var(--r);
+    font-size: 1rem;
+    font-family: var(--body);
+    transition: box-shadow 0.18s ease, background 0.18s ease;
+  }
+  .ct__field textarea { resize: vertical; min-height: 7rem; line-height: 1.6; }
+  .ct__field input::placeholder,
+  .ct__field textarea::placeholder { color: var(--ink-faint); }
+  .ct__field input:focus,
+  .ct__field select:focus,
+  .ct__field textarea:focus {
+    outline: none;
+    background: #fff;
+    box-shadow: 4px 4px 0 var(--grape);
+  }
+  .ct__field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232B1810' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.4rem;
+  }
+
+  .ct__submit { justify-self: start; margin-top: 0.4rem; }
+  .ct__submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  .ct__status { font-size: 0.9rem; line-height: 1.55; min-height: 1px; }
+  .ct__status[data-tone='ok']  { color: #0A6E52; font-weight: 600; }
+  .ct__status[data-tone='bad'] { color: #A81B18; font-weight: 600; }
+
+  @media (min-width: 950px) {
+    .ct__grid { grid-template-columns: 0.9fr 1.1fr; gap: clamp(3rem, 6vw, 5rem); }
+  }
+</style>

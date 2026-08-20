@@ -1,0 +1,72 @@
+---
+import { makes, experienceYears } from '../data/site';
+---
+
+<section class="mk" id="make">
+  <div class="shell">
+    <div class="mk__head">
+      <h2 class="mk__h2">What I can make for you</h2>
+      <p class="mk__sub">
+        If you're not sure which of these you need, that's fine — most people aren't.
+        That's the first thing we work out together.
+      </p>
+    </div>
+
+    <ul class="mk__grid">
+      {makes.map((m, i) => (
+        <li class="mk__item reveal" data-reveal-delay={(i % 3) * 80}>
+          <h3>{m.title}</h3>
+          <p>{m.body}</p>
+        </li>
+      ))}
+    </ul>
+
+    <p class="mk__note">
+      <strong>{experienceYears} years building software</strong>, most of it for companies overseas,
+      all of it remote. Now I'm putting my experience to work for people who need
+      something built.
+    </p>
+  </div>
+</section>
+
+<style>
+  .mk {
+    background: var(--paper-deep);
+    border-block: var(--edge) solid var(--ink);
+    padding-block: clamp(3.5rem, 7vw, 5.5rem);
+  }
+
+  .mk__head { margin-bottom: clamp(2.25rem, 4vw, 3rem); }
+  .mk__h2 { font-size: var(--t-h2); margin-bottom: 0.9rem; }
+  .mk__sub { color: var(--ink-soft); max-width: 52ch; line-height: 1.6; }
+
+  .mk__grid { display: grid; gap: 1.5rem; }
+
+  .mk__item {
+    background: var(--paper-pale);
+    border: var(--edge) solid var(--ink);
+    border-radius: var(--r);
+    padding: 1.4rem 1.35rem 1.5rem;
+    border-left: 6px solid var(--orange);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .mk__item:nth-child(3n + 2) { border-left-color: var(--grape); }
+  .mk__item:nth-child(3n + 3) { border-left-color: var(--jade); }
+  .mk__item:hover { transform: translate3d(0, -3px, 0); box-shadow: 5px 5px 0 var(--ink); }
+
+  .mk__item h3 { font-size: 1.18rem; margin-bottom: 0.5rem; letter-spacing: -0.025em; }
+  .mk__item p { color: var(--ink-soft); font-size: 0.95rem; line-height: 1.6; }
+
+  .mk__note {
+    margin-top: clamp(2.25rem, 4vw, 3rem);
+    padding-top: 1.5rem;
+    border-top: var(--edge) solid color-mix(in srgb, var(--ink) 25%, transparent);
+    color: var(--ink-soft);
+    max-width: 60ch;
+    line-height: 1.65;
+  }
+  .mk__note strong { color: var(--ink); font-weight: 700; }
+
+  @media (min-width: 700px)  { .mk__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1040px) { .mk__grid { grid-template-columns: repeat(3, 1fr); } }
+</style>

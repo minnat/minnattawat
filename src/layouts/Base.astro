@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/assets/og.png', Astro.site).href;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content={site.name} />
+    <meta name="theme-color" content="#FFF1E0" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Fallback for browsers that ignore SVG favicons (older Safari). -->
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+    />
+
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: site.name,
+        jobTitle: site.role,
+        url: `https://${site.domain}`,
+        address: { '@type': 'PostalAddress', addressLocality: 'Bangkok', addressCountry: 'TH' },
+        sameAs: [site.linkedin, site.github, 'https://whereto.party'],
+        knowsAbout: ['Web development', 'Mobile apps', 'Online shops', 'Booking systems', 'Software development'],
+      })}
+    />
+
+    <!-- Flip the JS flag before first paint so reveal states never flash. -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+
+  <body>
+    <a href="#main" class="skip">Skip to content</a>
+    <slot />
+
+    <script>
+      import '../scripts/motion';
+    </script>
+
+    <style>
+      .skip {
+        position: absolute;
+        left: -9999px;
+        top: 0.75rem;
+        z-index: 10000;
+        padding: 0.75rem 1.25rem;
+        background: var(--ink);
+        color: var(--paper-pale);
+        border-radius: 4px;
+        font-weight: 700;
+      }
+      .skip:focus { left: 0.75rem; }
+    </style>
+  </body>
+</html>

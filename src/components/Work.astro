@@ -1,0 +1,242 @@
+---
+/**
+ * The proof. Runs on the ink band both to break the page's rhythm and because
+ * the product itself is a dark, phone-first nightlife app — the section looks
+ * like the thing it describes.
+ *
+ * Every fact here is durable on purpose. Commit counts and test numbers were
+ * removed: they mean nothing to this audience and go stale in a week.
+ *
+ * To use a real screenshot instead of the recreated panel: drop the image in
+ * public/assets/ and replace the .wk__device block with an <img>.
+ */
+
+const facts = [
+  { k: 'Started', v: 'June 2026' },
+  { k: 'Online in', v: 'About 2 weeks' },
+  { k: 'Maintenance', v: 'Hardly any' },
+  { k: 'Built by', v: 'Me, on my own' },
+];
+
+const highlights = [
+  {
+    color: 'orange',
+    title: 'Posting an event takes a minute',
+    body:
+      'Organisers paste a link to their Instagram post and the form fills itself in — the name, the date, the place, the picture. They check it and press submit. Getting that from ten minutes down to one is the difference between people using it and people giving up.',
+  },
+  {
+    color: 'grape',
+    title: 'Nothing on it has already finished',
+    body:
+      'A listings site is only worth opening if you can trust what is on it. So events drop off when they actually end, rather than when they start — a party that kicks off at ten is still listed at one in the morning, which is exactly when someone is looking for it.',
+  },
+  {
+    color: 'jade',
+    title: 'Nobody has to create an account',
+    body:
+      'No sign-ups, no passwords, no "please verify your email". You post your event and get a link that lets you edit it later. Every extra step is people you lose, so there are as few as I could manage.',
+  },
+];
+---
+
+<section class="band band--ink wk" id="work">
+  <div class="shell">
+    <p class="eyebrow">Something I made, start to finish</p>
+
+    <div class="wk__top">
+      <div class="wk__intro">
+        <h2 class="wk__h2">whereto<span class="wk__dot">.party</span></h2>
+        <p class="wk__tag">A real website, built by me, running right now</p>
+
+        <p class="wk__body">
+          It answers one question: what's on tonight? People use it to find parties and
+          events near them — pick your city, see what's happening, tap through for the
+          details. It's built for a phone, because that's what you're holding when you're
+          deciding where to go.
+        </p>
+        <p class="wk__body">
+          I had the idea, drew it, built it, and put it online. Nobody else was
+          involved, and it has been running ever since.
+        </p>
+
+        <div class="wk__cta">
+          <a href="https://whereto.party" class="btn btn--pale" target="_blank" rel="noopener">
+            Have a look
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="wk__panel" aria-hidden="true">
+        <div class="wk__device" data-parallax="0.03">
+          <div class="dv">
+            <div class="dv__top">
+              <span class="dv__logo">whereto<em>.party</em></span>
+              <span class="dv__post">Post event</span>
+            </div>
+            <div class="dv__cities">
+              <span class="dv__city dv__city--on">All</span>
+              <span class="dv__city">Bangkok</span>
+              <span class="dv__city">Tokyo</span>
+              <span class="dv__city">Seoul</span>
+            </div>
+            <p class="dv__day">Tonight</p>
+            <div class="dv__card">
+              <div class="dv__art dv__art--a"></div>
+              <div class="dv__meta">
+                <span class="dv__up">Up next</span>
+                <b>Rooftop &amp; Bass — Season Opener</b>
+                <span class="dv__sub">Bangkok · Sathorn</span>
+              </div>
+            </div>
+            <div class="dv__card">
+              <div class="dv__art dv__art--b"></div>
+              <div class="dv__meta">
+                <b>Basement Records Night</b>
+                <span class="dv__sub">Tokyo · Shibuya</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="wk__note mono">A sketch of the real site — it's one click away</p>
+      </div>
+    </div>
+
+    <ul class="wk__facts">
+      {facts.map((f) => (
+        <li>
+          <span class="wk__factk">{f.k}</span>
+          <span class="wk__factv">{f.v}</span>
+        </li>
+      ))}
+    </ul>
+
+    <h3 class="wk__sub">Three things I had to solve</h3>
+    <div class="wk__grid">
+      {highlights.map((h, i) => (
+        <article class={`wk__hl wk__hl--${h.color} reveal`} data-reveal-delay={i * 90}>
+          <h4>{h.title}</h4>
+          <p>{h.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="wk__closing">
+      That's the point of showing you this. Not the website itself — the fact that one
+      person took it from an idea to something real people use, and still keeps it
+      running. That's what I'd be doing for you.
+    </p>
+  </div>
+</section>
+
+<style>
+  .wk { color: var(--paper-pale); }
+  .wk__top { display: grid; gap: clamp(2.5rem, 6vw, 4rem); align-items: start; }
+
+  .wk__h2 { font-size: clamp(2.4rem, 6vw, 4.4rem); letter-spacing: -0.045em; }
+  /* Matches the real logo, which sets ".party" in the brand magenta. */
+  .wk__h2 .wk__dot { color: #F0168A; }
+  .wk__tag {
+    font-family: var(--mono);
+    font-size: var(--t-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--on-ink-soft);
+    margin-top: 1.1rem;
+  }
+  .wk__body { color: var(--on-ink); font-size: var(--t-lead); line-height: 1.6; margin-top: 1.5rem; max-width: 50ch; }
+  .wk__cta { margin-top: 2.25rem; }
+
+  /* device — whereto.party's own brand colours, not this site's palette, so
+     the sketch looks like the real product. Taken from its globals.css. */
+  .wk__panel {
+    --wtp-brand: #F0168A;
+    --wtp-brand-2: #FF1A95;
+    --wtp-violet: #7A2BFF;
+    --wtp-teal: #00D2B4;
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+  }
+  .wk__device {
+    width: min(320px, 100%);
+    border: var(--edge) solid var(--paper-pale);
+    border-radius: 22px;
+    padding: 0.55rem;
+    background: #1A0E08;
+    box-shadow: var(--misreg) var(--misreg) 0 var(--wtp-brand);
+    will-change: transform;
+  }
+  .dv { background: #120904; border-radius: 16px; padding: 0.9rem 0.8rem 1rem; display: grid; gap: 0.7rem; }
+  .dv__top { display: flex; align-items: center; justify-content: space-between; }
+  .dv__logo { font-weight: 800; font-size: 0.9rem; letter-spacing: -0.02em; }
+  .dv__logo em { color: var(--wtp-brand); font-style: normal; }
+  .dv__post { font-size: 0.62rem; color: var(--on-ink-faint); }
+  .dv__cities { display: flex; gap: 0.35rem; overflow: hidden; }
+  .dv__city {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 100px;
+    border: 1px solid #4A3225;
+    color: var(--on-ink-soft);
+    white-space: nowrap;
+  }
+  .dv__city--on { background: var(--paper-pale); color: #1A0E08; border-color: var(--paper-pale); font-weight: 700; }
+  .dv__day { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.2em; color: var(--on-ink-faint); text-transform: uppercase; }
+  .dv__card { background: #1E1109; border-radius: 10px; overflow: hidden; }
+  .dv__art { height: 4.4rem; }
+  .dv__art--a { background: linear-gradient(120deg, var(--wtp-brand) 0%, var(--wtp-violet) 100%); }
+  .dv__art--b { background: linear-gradient(120deg, var(--wtp-violet) 0%, var(--wtp-teal) 100%); }
+  .dv__meta { padding: 0.6rem 0.7rem 0.75rem; display: grid; gap: 0.2rem; }
+  .dv__up { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--wtp-brand-2); }
+  .dv__meta b { font-size: 0.78rem; line-height: 1.3; }
+  .dv__sub { font-size: 0.62rem; color: var(--on-ink-faint); }
+  .wk__note { color: var(--on-ink-faint); letter-spacing: 0.1em; text-align: center; }
+
+  /* facts strip */
+  .wk__facts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    background: #5C3A26;
+    border: 1px solid #5C3A26;
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .wk__facts li { background: var(--ink); padding: 1.1rem 1.25rem; display: grid; gap: 0.35rem; align-content: start; }
+  .wk__factk { font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--on-ink-faint); }
+  .wk__factv { font-family: var(--display); font-weight: 700; font-size: 1.12rem; line-height: 1.35; letter-spacing: -0.02em; }
+
+  /* highlights */
+  .wk__sub { font-size: var(--t-h2); margin-top: clamp(3.5rem, 7vw, 5.5rem); margin-bottom: 2.25rem; }
+  .wk__grid { display: grid; gap: 1.5rem; }
+  .wk__hl {
+    background: var(--card-dark);
+    border: 1px solid #5C3A26;
+    border-radius: var(--r);
+    padding: 1.75rem 1.6rem;
+    border-top: 4px solid var(--orange);
+  }
+  .wk__hl--grape { border-top-color: var(--grape); }
+  .wk__hl--jade  { border-top-color: var(--jade); }
+  .wk__hl h4 { font-size: var(--t-h3); margin-bottom: 0.85rem; }
+  .wk__hl p { color: var(--on-ink); font-size: 0.97rem; line-height: 1.65; }
+
+  .wk__closing {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--on-ink);
+    font-size: var(--t-lead);
+    line-height: 1.6;
+    max-width: 62ch;
+    padding-left: 1.25rem;
+    border-left: 4px solid var(--jade);
+  }
+
+  @media (min-width: 900px) {
+    .wk__top { grid-template-columns: 1.15fr 0.85fr; }
+    .wk__facts { grid-template-columns: repeat(4, 1fr); }
+    .wk__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
