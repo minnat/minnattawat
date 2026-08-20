@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "private": true,
-  "description": "Personal site for Min Nattawat \u2014 websites, built start to finish.",
+  "description": "Personal site for Min Nattawat — websites, built start to finish.",
   "author": "Nattawat Choojirawong",
   "license": "UNLICENSED",
   "homepage": "https://minnattawat.com",
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.124.0"
   }
 }

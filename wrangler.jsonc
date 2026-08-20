@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "minnattawat",
+  "compatibility_date": "2026-08-20",
+
+  // Static site: `assets.directory` is all that's needed. There is deliberately
+  // no `main` field — that would point at Worker code for on-demand rendering,
+  // and this site is prerendered to plain files at build time.
+  "assets": {
+    "directory": "./dist"
+  }
+}
