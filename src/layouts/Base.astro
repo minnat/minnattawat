@@ -51,6 +51,7 @@ const ogImage = new URL('/assets/og.png', Astro.site).href;
         '@context': 'https://schema.org',
         '@type': 'Person',
         name: site.name,
+        alternateName: site.shortName,
         jobTitle: site.role,
         url: `https://${site.domain}`,
         address: { '@type': 'PostalAddress', addressLocality: 'Bangkok', addressCountry: 'TH' },
