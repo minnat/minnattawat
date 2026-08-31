@@ -76,12 +76,28 @@ const instagramHandle = site.instagram
 
           <div class="ct__field">
             <label for="cf-name">Your name</label>
-            <input id="cf-name" name="name" type="text" required autocomplete="name" placeholder="John Somebody" />
+            <input
+              id="cf-name"
+              name="name"
+              type="text"
+              required
+              autocomplete="name"
+              placeholder="John Somebody"
+              class="ph-no-capture"
+            />
           </div>
 
           <div class="ct__field">
             <label for="cf-email">Email</label>
-            <input id="cf-email" name="email" type="email" required autocomplete="email" placeholder="john@company.com" />
+            <input
+              id="cf-email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              placeholder="john@company.com"
+              class="ph-no-capture"
+            />
           </div>
 
           <div class="ct__field">
@@ -102,6 +118,7 @@ const instagramHandle = site.instagram
               name="message"
               rows="5"
               required
+              class="ph-no-capture"
               placeholder="What you want it to do, who it's for, and anything that already exists. Rough is completely fine."
             ></textarea>
           </div>
@@ -118,6 +135,8 @@ const instagramHandle = site.instagram
 </section>
 
 <script>
+  import { track } from '../scripts/analytics';
+
   const form = document.querySelector<HTMLFormElement>('[data-contact]');
 
   if (form) {
@@ -125,6 +144,91 @@ const instagramHandle = site.instagram
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
     const label = button.querySelector<HTMLElement>('[data-label]')!;
     const original = label.textContent ?? 'Send it to me';
+
+    /*
+     * Analytics for the form. The question worth answering is not just "how
+     * many people sent something", it's "how many started and gave up, and
+     * where". So: a start event, a per-field completion event, and an
+     * abandonment event on the way out.
+     *
+     * What a visitor typed is never sent — only which fields they filled and
+     * how long they spent. `stage` is the one value that travels, because it is
+     * a fixed five-option dropdown rather than free text.
+     */
+    const FIELDS = ['name', 'email', 'stage', 'message'];
+    const TYPED_FIELDS = ['name', 'email', 'message'];
+
+    const field = (name: string) =>
+      form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+
+    const valueOf = (name: string) => field(name)?.value ?? '';
+    // `stage` is excluded: it has a default selection, so it is always "filled"
+    // and would say nothing about effort.
+    const filledFields = () => TYPED_FIELDS.filter((name) => valueOf(name).trim() !== '');
+
+    let startedAt = 0;
+    let lastField = '';
+    let submitted = false;
+    const completed = new Set<string>();
+
+    form.addEventListener('input', (event) => {
+      const name = (event.target as HTMLElement | null)?.getAttribute('name') ?? '';
+      if (!FIELDS.includes(name)) return;
+
+      lastField = name;
+      if (startedAt) return;
+      startedAt = Date.now();
+      track('contact_form_started', { first_field: name });
+    });
+
+    // focusout rather than blur, because blur does not bubble.
+    form.addEventListener('focusout', (event) => {
+      const name = (event.target as HTMLElement | null)?.getAttribute('name') ?? '';
+      if (!FIELDS.includes(name)) return;
+      if (!valueOf(name).trim() || completed.has(name)) return;
+
+      completed.add(name);
+      track('contact_form_field_completed', { field: name });
+    });
+
+    /*
+     * A form that keeps rejecting people is quietly losing enquiries, so it is
+     * worth knowing about. The browser refuses to fire `submit` at all when a
+     * required field is empty, so this has to hook the `invalid` event instead —
+     * which does not bubble, hence the capture phase. One fires per invalid
+     * control, so they are batched into a single event per attempt.
+     */
+    let invalidFields: string[] = [];
+    form.addEventListener(
+      'invalid',
+      (event) => {
+        const name = (event.target as HTMLElement | null)?.getAttribute('name') ?? '';
+        if (!FIELDS.includes(name)) return;
+
+        if (!invalidFields.length) {
+          window.setTimeout(() => {
+            track('contact_form_validation_failed', { invalid_fields: invalidFields });
+            invalidFields = [];
+          }, 0);
+        }
+        invalidFields.push(name);
+      },
+      true,
+    );
+
+    // pagehide, not beforeunload: beforeunload is unreliable on mobile Safari.
+    window.addEventListener('pagehide', () => {
+      if (!startedAt || submitted) return;
+      track(
+        'contact_form_abandoned',
+        {
+          fields_filled: filledFields(),
+          last_field: lastField,
+          seconds_spent: Math.round((Date.now() - startedAt) / 1000),
+        },
+        true,
+      );
+    });
 
     const setStatus = (message: string, tone: 'ok' | 'bad' | '') => {
       status.textContent = message;
@@ -141,6 +245,13 @@ const instagramHandle = site.instagram
       label.textContent = 'Sending…';
       setStatus('', '');
 
+      submitted = true;
+      track('contact_form_submitted', {
+        stage: valueOf('stage'),
+        message_length: valueOf('message').length,
+        seconds_spent: startedAt ? Math.round((Date.now() - startedAt) / 1000) : 0,
+      });
+
       const payload = Object.fromEntries(new FormData(form).entries());
 
       try {
@@ -155,6 +266,7 @@ const instagramHandle = site.instagram
           form.reset();
           label.textContent = 'Sent';
           setStatus('Got it — I’ll get back to you within a day or two.', 'ok');
+          track('contact_form_succeeded');
           return;
         }
         throw new Error(result.message || `Form service returned ${response.status}.`);
@@ -164,6 +276,7 @@ const instagramHandle = site.instagram
         // The upstream text is for whoever maintains the site, not the visitor —
         // they get one clear instruction and a route that always works.
         console.error('[contact]', error);
+        track('contact_form_failed', { reason: String((error as Error)?.message ?? error).slice(0, 200) });
         setStatus(
           'That didn’t send — please try again in a moment. If it keeps failing, message me on LinkedIn and I’ll pick it up there.',
           'bad',

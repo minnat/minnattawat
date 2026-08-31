@@ -34,6 +34,7 @@ src/
   data/site.ts        All the site's content: copy, services, process, history.
   styles/global.css   Design tokens and shared primitives.
   scripts/motion.ts   Scroll reveals, parallax, sticky header, mobile menu.
+  scripts/analytics.ts PostHog: what to track, and how to exclude yourself.
   layouts/Base.astro  <head>, fonts, metadata, structured data.
   components/         One file per section, in page order.
   pages/index.astro   Assembles the sections.
@@ -112,6 +113,41 @@ needs no backend and no secrets.
 leak. Web3Forms stores the destination address against the key on their side,
 so the key only ever delivers to one inbox and the address itself appears
 nowhere in this repository or in the served page.
+
+## Analytics
+
+PostHog, loaded lazily so it never competes with first paint. Set `posthogKey`
+in `src/data/site.ts` to switch it on; leave it empty and nothing is downloaded
+and nothing is sent.
+
+It is **cookieless** (`persistence: 'memory'`), which is why there is no cookie
+banner. The cost is that a returning visitor counts as a new one — barely a loss
+on a single-page site, where a visit is a page load anyway.
+
+Beyond pageviews it tracks the calls to action, outbound links, CV views, how
+far down the page people get, and the contact form as a funnel — including
+`contact_form_abandoned`, for people who start typing and never send. No field
+value ever leaves the browser; the events record which fields were filled and
+how long they took, not what was in them.
+
+### Keeping your own visits out
+
+Open the live site once **per browser** at `?analytics=off`. That sets a
+localStorage flag which is checked before PostHog loads, so nothing is even
+downloaded.
+
+| URL | Effect |
+| --- | --- |
+| `minnattawat.com/?analytics=off` | Stop counting this browser. |
+| `minnattawat.com/?analytics=on` | Start counting it again. |
+| `?analytics=debug` | Force tracking on and log every event to the console. |
+
+`localhost` and `*.workers.dev` are skipped automatically, so development and
+preview traffic never reaches the data.
+
+The honest limits: it is per browser profile, clearing site data forgets it, and
+private windows are never excluded. PostHog's project-level "internal and test
+users" filter is the backstop, and unlike this flag it applies retroactively.
 
 ## Licence
 

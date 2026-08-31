@@ -32,6 +32,20 @@ export const site = {
   /** Public by design — safe to commit and ship in the browser. */
   web3formsKey: '6b3f425b-1c68-4ef6-9553-cdaa29003bec',
 
+  /**
+   * PostHog analytics. The project token is public by design, same as the key
+   * above — it can only write events, never read them.
+   *
+   * Leave `posthogKey` empty and analytics stays completely switched off: no
+   * script is downloaded and no requests are made. Paste the `phc_…` token from
+   * PostHog → Project settings to turn it on.
+   *
+   * To keep your own visits out of the data, open the live site once per browser
+   * at `?analytics=off`. See src/scripts/analytics.ts for the full story.
+   */
+  posthogKey: 'phc_tgPpsuJBRMEiDeFNDGe8p6PP3Tu6VTP7GTvZC99weKHZ' as string,
+  posthogHost: 'https://us.i.posthog.com',
+
   /** Drop a square-ish photo in public/assets/ and put the filename here. */
   headshot: '/assets/photo-ginkgo.jpg',
 } as const;

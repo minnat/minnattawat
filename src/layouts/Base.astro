@@ -44,6 +44,9 @@ const ogImage = new URL('/assets/og.png', Astro.site).href;
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
     />
 
+    {/* Only worth a handshake when analytics is actually configured. */}
+    {site.posthogKey && <link rel="preconnect" href={site.posthogHost} crossorigin />}
+
     <script
       is:inline
       type="application/ld+json"
@@ -72,6 +75,7 @@ const ogImage = new URL('/assets/og.png', Astro.site).href;
 
     <script>
       import '../scripts/motion';
+      import '../scripts/analytics';
     </script>
 
     <style>
