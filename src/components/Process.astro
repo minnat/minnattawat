@@ -33,6 +33,12 @@ import { process } from '../data/site';
         parts of it working. No monthly fee, no minimum, nothing to cancel. Your domain and
         every account is in your name from day one, not signed over at the end.
       </p>
+      <p>
+        Connecting two systems, or handing one job over to a computer, is usually a much
+        smaller piece of work than building something from scratch — often days rather
+        than weeks. So if a whole project is more than you want to take on right now,
+        ask me about one of those instead.
+      </p>
     </aside>
   </div>
 </section>
@@ -76,7 +82,8 @@ import { process } from '../data/site';
 
   .pr__note { margin-top: clamp(2.5rem, 5vw, 3.5rem); padding: 1.85rem 1.7rem; max-width: 62ch; }
   .pr__notek { color: var(--grape-text); margin-bottom: 0.7rem; }
-  .pr__note p:last-child { color: var(--ink-soft); line-height: 1.68; }
+  .pr__note > p:not(.pr__notek) { color: var(--ink-soft); line-height: 1.68; }
+  .pr__note > p:not(.pr__notek) + p { margin-top: 0.9rem; }
 
   @media (min-width: 760px) {
     .pr__step { grid-template-columns: 4.5rem 1fr; gap: 2.5rem; }

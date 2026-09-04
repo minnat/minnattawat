@@ -70,7 +70,9 @@ import { nav, site } from '../data/site';
   }
   .hd__mark:hover .hd__markdot { background: var(--jade); }
 
-  .hd__nav { display: none; gap: 1.9rem; }
+  /* Five items rather than four: the gap has to give a little between the
+     900px breakpoint and a full-width desktop, or the nav crowds the CTA. */
+  .hd__nav { display: none; gap: clamp(1.05rem, 2.1vw, 1.9rem); }
   .hd__nav a {
     font-size: 0.94rem;
     font-weight: 600;

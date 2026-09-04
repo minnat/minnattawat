@@ -101,18 +101,40 @@ const instagramHandle = site.instagram
           </div>
 
           <div class="ct__field">
+            <label for="cf-topic">What do you need help with?</label>
+            {/*
+              Every option completes the question as a sentence — "I need help
+              with building a website" — so all three are gerunds, and each one
+              names the outcome the sender wants rather than the situation they
+              are in. "Work done by hand" was the situation; "automating work
+              done by hand" is the job.
+
+              Broad on purpose, too. Naming examples here — "a shop", "a booking
+              system" — makes anyone whose need isn't on the list assume they are
+              in the wrong place. What they actually want goes in the message box.
+            */}
+            <select id="cf-topic" name="topic">
+              <option value="Website">Building a website</option>
+              <option value="Existing systems">Connecting or improving what I already use</option>
+              <option value="Manual work">Automating work we do by hand</option>
+              <option value="Not sure">Not sure yet</option>
+            </select>
+          </div>
+
+          <div class="ct__field">
             <label for="cf-stage">How far along are you?</label>
             <select id="cf-stage" name="stage">
               <option value="Just an idea">Just an idea so far</option>
               <option value="Idea and some notes">I've written some notes down</option>
               <option value="Designs or drawings exist">There are designs or drawings</option>
               <option value="Something exists already">Something exists but needs work</option>
+              <option value="Started with AI">I made a version with AI and it stalled</option>
               <option value="Not sure yet">Honestly not sure yet</option>
             </select>
           </div>
 
           <div class="ct__field">
-            <label for="cf-message">What do you have in mind?</label>
+            <label for="cf-message">In your own words</label>
             <textarea
               id="cf-message"
               name="message"
@@ -152,18 +174,20 @@ const instagramHandle = site.instagram
      * abandonment event on the way out.
      *
      * What a visitor typed is never sent — only which fields they filled and
-     * how long they spent. `stage` is the one value that travels, because it is
-     * a fixed five-option dropdown rather than free text.
+     * how long they spent. `topic` and `stage` are the only values that travel,
+     * because they are fixed dropdowns rather than free text. `topic` is the one
+     * worth watching: it says which of the two offerings actually brings people
+     * here.
      */
-    const FIELDS = ['name', 'email', 'stage', 'message'];
+    const FIELDS = ['name', 'email', 'topic', 'stage', 'message'];
     const TYPED_FIELDS = ['name', 'email', 'message'];
 
     const field = (name: string) =>
       form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
 
     const valueOf = (name: string) => field(name)?.value ?? '';
-    // `stage` is excluded: it has a default selection, so it is always "filled"
-    // and would say nothing about effort.
+    // The dropdowns are excluded: they have default selections, so they are
+    // always "filled" and would say nothing about effort.
     const filledFields = () => TYPED_FIELDS.filter((name) => valueOf(name).trim() !== '');
 
     let startedAt = 0;
@@ -247,6 +271,7 @@ const instagramHandle = site.instagram
 
       submitted = true;
       track('contact_form_submitted', {
+        topic: valueOf('topic'),
         stage: valueOf('stage'),
         message_length: valueOf('message').length,
         seconds_spent: startedAt ? Math.round((Date.now() - startedAt) / 1000) : 0,

@@ -1,7 +1,8 @@
 # minnattawat.com
 
-The personal site of Min Nattawat — a one-page pitch for building websites end
-to end, with [whereto.party](https://whereto.party) as the worked example.
+The personal site of Min Nattawat — a one-page pitch for two things: building
+websites end to end, and connecting or automating the systems a business already
+runs. [whereto.party](https://whereto.party) is the worked example for both.
 
 **Live at [minnattawat.com](https://minnattawat.com)**
 
@@ -71,6 +72,50 @@ anywhere — no stack names, no framework names, no acronyms. It also carries no
 figures that decay: no commit counts, no test totals, no city lists that grow.
 Every number on the page stays true without maintenance.
 
+**"AI" is the single permitted exception**, because the people this is written
+for already use the word themselves. Nothing underneath it gets through: not
+"LLM", not "agent", not "tool calling", and not "integration" as a noun — that
+one is "systems that talk to each other". "Prompt injection" is "someone hiding
+an instruction in a message to make it misbehave". If a term needs explaining
+before the sentence works, it is the wrong term.
+
+Three places are exempt, and only these three:
+
+- **The structured data in `Base.astro`.** Nobody reads it, and search engines
+  match on the standard vocabulary, so it says "systems integration" and
+  "business process automation" where the page says neither.
+- **The `<title>` and meta description.** They are search results, not copy.
+  "AI automation" is there because it is what people type into a search box.
+- **The `#hiring` block.** It is the one part of the page addressed to
+  employers rather than customers, so "full-stack engineering" is the right
+  words for its reader. Nothing above it does.
+
+### The two offerings
+
+`Makes` is websites; `Systems` is everything that isn't one. They are peers, and
+read that way through paired eyebrows — "Half of what I do" / "The other half of
+what I do" — and a card treatment from the same family with the colour rule
+rotated from the left edge to the top.
+
+**Band rhythm.** `Makes` sits on the deeper peach, `Systems` on plain stock, the
+case study on ink: light, deep, dark. Two dark sections in a row flattens the run
+into the case study, which is where the page wants its strongest contrast.
+
+**Scope.** `Systems` covers software you log into in a browser. Desktop programs
+are out of scope, and the section says so at its top and bottom rather than in
+every card.
+
+**Vocabulary.** The noun is "online software" — not "web app", since "app" reads
+as phone app, and not "online tool", which sounds like a free utility rather than
+something a business runs on. Where it has to be exact, the copy names the
+behaviour instead of the category: "if you log into it in a browser".
+
+**Contact form options.** Broad, and each one completes the question "What do you
+need help with?" as a sentence, which is why all three are gerunds — reword the
+label and the options have to move with it. The `value` attributes are what reach
+PostHog, so keep them short and stable when a visible label changes; changing a
+value splits the funnel into two series that look like a drop in traffic.
+
 ## Implementation notes
 
 A few things that are less obvious than they look:
@@ -110,9 +155,11 @@ The form posts to [Web3Forms](https://web3forms.com), which is why the site
 needs no backend and no secrets.
 
 **The access key in `src/data/site.ts` is public by design** — it is not a
-leak. Web3Forms stores the destination address against the key on their side,
-so the key only ever delivers to one inbox and the address itself appears
-nowhere in this repository or in the served page.
+leak. Web3Forms stores the destination address against the key on their side, so
+the key only ever delivers to one inbox and the address is never published as
+scrapeable text. The CV in `public/` is the exception: it carries its own contact
+details, is committed here, and is linked from the page. `robots.txt` disallows
+it, which keeps it out of search results but does not hide it.
 
 ## Analytics
 
@@ -129,6 +176,23 @@ far down the page people get, and the contact form as a funnel — including
 `contact_form_abandoned`, for people who start typing and never send. No field
 value ever leaves the browser; the events record which fields were filled and
 how long they took, not what was in them.
+
+The two exceptions are the form's dropdowns, `topic` and `stage`, which travel
+with `contact_form_submitted` because they are fixed lists rather than free text.
+`topic` is the one to watch: with two offerings on the page, it is the only thing
+that says which of them people are actually writing in about.
+
+**Section views are named events, not one event with a property**:
+`section_viewed_01_hero`, `section_viewed_02_make`, `section_viewed_03_systems`
+and so on. The drop-off is then legible on PostHog's event list without breaking
+anything down, and each section is a step you can drop straight into a funnel.
+The number is the section's position read from the DOM, so adding or reordering
+a section renumbers the ones after it by itself; it is padded to a fixed two
+digits so the events sort into reading order rather than `10` landing above `2`.
+The padding is deliberately not derived from the section count — if it were,
+going from nine sections to ten would rename every event on the page rather than
+only the ones that moved. Renaming a section's `id` also renames its event and
+starts a new series in PostHog, which is the one thing to be deliberate about.
 
 ### Keeping your own visits out
 

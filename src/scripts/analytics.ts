@@ -10,8 +10,9 @@
  *
  * 2. It never sends anything a visitor typed. No field value from the contact
  *    form is ever captured; the events record which fields were filled and how
- *    long they took, never what was in them. The one exception is the "stage"
- *    dropdown, which is a fixed list of five options rather than free text.
+ *    long they took, never what was in them. The only exceptions are the form's
+ *    two dropdowns, "topic" and "stage", which are fixed lists rather than free
+ *    text.
  *
  * 3. It stores nothing on a visitor's machine. `persistence: 'memory'` means no
  *    cookies and no localStorage, which is why the site needs no cookie banner.
@@ -259,17 +260,43 @@ function initMenu(): void {
  * How far down the page people actually get. On a single long page this is the
  * other half of "why didn't they get in touch" — it shows where reading stops.
  * Mirrors the IntersectionObserver pattern in motion.ts.
+ *
+ * Each section sends an event under its own name — `section_viewed_03_systems`
+ * rather than one `section_viewed` carrying a property. On a page whose whole
+ * shape is "how far did they read", that puts the drop-off on PostHog's event
+ * list itself, with no breaking down by property to get at it, and makes each
+ * section a step you can drop straight into a funnel.
+ *
+ * The number is the section's position in the page, read from the DOM, so
+ * inserting or reordering a section renumbers the ones after it on its own. It
+ * is zero-padded because these are read as a sorted list: unpadded,
+ * `section_viewed_10_contact` sorts above `section_viewed_2_make`, which
+ * destroys the ordering that is the entire point of numbering them.
  */
 function initSections(): void {
   const sections = document.querySelectorAll<HTMLElement>('main section[id]');
   if (!sections.length || !('IntersectionObserver' in window)) return;
+
+  // Fixed at two digits rather than derived from the count: deriving it means
+  // that going from nine sections to ten renames every event on the page, not
+  // just the ones that moved.
+  const pad = 2;
+  const names = new Map<Element, string>();
+  sections.forEach((section, i) => {
+    // `top` is the hero's anchor id; it is not a useful name in a list of events.
+    const slug = (section.id === 'top' ? 'hero' : section.id).toLowerCase().replace(/[^a-z0-9]+/g, '_');
+    names.set(section, `section_viewed_${String(i + 1).padStart(pad, '0')}_${slug}`);
+  });
 
   const io = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         const el = entry.target as HTMLElement;
-        track('section_viewed', { section: el.id === 'top' ? 'hero' : el.id });
+        // The properties are redundant against the event name and are kept only
+        // so a single "how far do people scroll" insight is still possible
+        // without picking every event out by hand.
+        track(names.get(el)!, { section: el.id === 'top' ? 'hero' : el.id });
         io.unobserve(el);
       }
     },

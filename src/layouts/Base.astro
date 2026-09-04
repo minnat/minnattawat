@@ -47,19 +47,89 @@ const ogImage = new URL('/assets/og.png', Astro.site).href;
     {/* Only worth a handshake when analytics is actually configured. */}
     {site.posthogKey && <link rel="preconnect" href={site.posthogHost} crossorigin />}
 
+    {/*
+      Two nodes in one graph: the person, and the practice the person runs. The
+      page markets services, so describing only a Person leaves search engines
+      nothing to attach them to — and this is a one-page site, so there are no
+      per-service pages doing that job either.
+
+      This is the one place the site's no-jargon rule does not apply. Nobody
+      reads it; search engines match on the standard vocabulary, so it uses the
+      terms the schema expects rather than the plain English on the page.
+    */}
     <script
       is:inline
       type="application/ld+json"
       set:html={JSON.stringify({
         '@context': 'https://schema.org',
-        '@type': 'Person',
-        name: site.name,
-        alternateName: site.shortName,
-        jobTitle: site.role,
-        url: `https://${site.domain}`,
-        address: { '@type': 'PostalAddress', addressLocality: 'Bangkok', addressCountry: 'TH' },
-        sameAs: [site.linkedin, site.github, 'https://whereto.party'],
-        knowsAbout: ['Web development', 'Mobile apps', 'Online shops', 'Booking systems', 'Software development'],
+        '@graph': [
+          {
+            '@type': 'Person',
+            '@id': `https://${site.domain}/#person`,
+            name: site.name,
+            alternateName: site.shortName,
+            jobTitle: site.role,
+            url: `https://${site.domain}`,
+            address: { '@type': 'PostalAddress', addressLocality: 'Bangkok', addressCountry: 'TH' },
+            sameAs: [site.linkedin, site.github, 'https://whereto.party'],
+            knowsAbout: [
+              'Web development',
+              'Online shops',
+              'Booking systems',
+              'Systems integration',
+              'Business process automation',
+              'Artificial intelligence',
+              'Software development',
+            ],
+          },
+          {
+            '@type': 'ProfessionalService',
+            '@id': `https://${site.domain}/#practice`,
+            name: `${site.shortName} — software, systems and AI automation`,
+            url: `https://${site.domain}`,
+            image: `https://${site.domain}/assets/og.png`,
+            provider: { '@id': `https://${site.domain}/#person` },
+            founder: { '@id': `https://${site.domain}/#person` },
+            address: { '@type': 'PostalAddress', addressLocality: 'Bangkok', addressCountry: 'TH' },
+            areaServed: [
+              { '@type': 'Country', name: 'Thailand' },
+              { '@type': 'Place', name: 'Remote, worldwide' },
+            ],
+            hasOfferCatalog: {
+              '@type': 'OfferCatalog',
+              name: 'What I build',
+              itemListElement: [
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Websites and web applications',
+                    description:
+                      'Business websites, online shops, booking and enquiry systems, and custom internal tools — designed, built and launched by one person.',
+                  },
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Systems integration',
+                    description:
+                      'Connecting the cloud and web-based software a business already runs so information moves between systems without anyone retyping it, including custom features built onto an existing web application.',
+                  },
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'AI automation',
+                    description:
+                      'Automating repetitive business processes with AI — reading and sorting incoming messages and documents, extracting structured data, and drafting responses, with validation and human review built in.',
+                  },
+                },
+              ],
+            },
+          },
+        ],
       })}
     />
 

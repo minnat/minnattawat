@@ -17,16 +17,27 @@ import { experienceYears } from '../data/site';
         Taking on new projects
       </p>
 
+      {/*
+        Two lines, and the accent is the whole of the second one — the payload
+        word printed as its own plate, the same shape the page's cards use.
+
+        The second line has to be a single word. Above a 843px viewport the type
+        pins at 5.8rem while the copy column is at its narrowest (397px at the
+        900px two-column breakpoint), and any two-word payload overruns it:
+        "missing piece." measures 552px, "missing part." 513px. They wrap, and a
+        wrapped accent breaks the plate in half.
+      */}
       <h1 class="hero__h1">
         I build<br />
-        <span class="hero__accent">websites.</span>
+        <span class="hero__accent">software.</span>
       </h1>
 
       <p class="hero__lead">
-        Somewhere customers can find you, a way to take bookings, an online shop — or
-        something built just for you, because nothing you can buy quite fits. I do the
-        whole of it myself: how it looks, how it works, and getting it online. You
-        don't need to understand any of the technical part.
+        Sometimes that's a website, a shop, a way to take bookings. Just as often it's
+        the part in between — an order retyped from one system into another, or the job
+        somebody on your team still does by hand every week. I work out what would
+        actually help, build it, and stay around while it runs. You don't need to
+        understand any of the technical part.
       </p>
 
       <div class="hero__cta">
@@ -62,8 +73,8 @@ import { experienceYears } from '../data/site';
           <ul class="does">
             <li><span class="does__tick"></span>Customers can book a time</li>
             <li><span class="does__tick"></span>Payments land in your account</li>
-            <li><span class="does__tick"></span>You get an email when they do</li>
-            <li><span class="does__tick"></span>Works the same on a phone</li>
+            <li><span class="does__tick"></span>Your other systems update too</li>
+            <li><span class="does__tick"></span>Nobody types anything twice</li>
           </ul>
         </div>
       </div>
@@ -251,7 +262,11 @@ import { experienceYears } from '../data/site';
   }
 
   @media (min-width: 900px) {
-    .hero__grid { grid-template-columns: 1.05fr 0.95fr; gap: clamp(3rem, 6vw, 6rem); }
+    /* 1.1fr, not 1.05fr: "software." is a wider word than "websites." was, and
+       at the 900px breakpoint the copy column is the narrowest it ever gets
+       while the display type is already pinned at its maximum. The extra 5%
+       keeps the same slack the old headline had before the accent would wrap. */
+    .hero__grid { grid-template-columns: 1.1fr 0.9fr; gap: clamp(3rem, 6vw, 6rem); }
     .hero__stack { padding-block: 2rem; }
     .pl--design { margin-right: 3.5rem; }
     .pl--build  { margin-left: 3rem; }
