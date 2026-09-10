@@ -1,0 +1,133 @@
+---
+import { makes, systems } from '../data/site';
+
+/**
+ * Both offerings in one section.
+ *
+ * They used to be two — Makes and Systems — presented as peers, each with its
+ * own eyebrow, heading, lead, six cards and a trailing note. That paid for the
+ * section furniture twice and ran to four screens on a phone before the reader
+ * reached any proof. The peer relationship is what mattered, not the two
+ * sections: it survives here as two labelled halves under one heading, which
+ * reads the same and costs half the height.
+ *
+ * Same writing rule as everywhere else, with one exception: "AI" is allowed to
+ * appear as itself, because the people reading this already use the word.
+ * Nothing underneath it is.
+ */
+
+/*
+ * The labels sort on build-vs-extend, not on website-vs-not, even though the
+ * heading above them makes the website joke. Two reasons: repeating "website"
+ * in the heading and both labels put the same word three times in fifteen
+ * words of structural copy, and the website split strains on "A tool just for
+ * you", which nobody would call a website.
+ *
+ * Nothing is lost by the mismatch, because both axes group these six cards
+ * identically — the new-build work is the website work, and the extend work is
+ * the systems work. The heading breaks the "he only does websites" assumption;
+ * the labels sort the reader. Different jobs, same six cards.
+ */
+const groups = [
+  {
+    key: 'make',
+    label: 'If you need something built',
+    items: makes,
+  },
+  {
+    key: 'systems',
+    label: 'If you need more from what you already have',
+    items: systems,
+  },
+];
+---
+
+<section class="band of" id="offer">
+  <div class="shell">
+    <p class="eyebrow">What I do</p>
+
+    <div class="of__head">
+      <h2 class="of__h2">It might be a website. It might not.</h2>
+      <p class="lead">
+        A simple site, or a product with sign-ins, customers and billing behind it. Or
+        nothing new at all — orders retyped by hand, messages read one at a time, the same
+        report rebuilt every month. Tell me what you've got and I'll say straight away
+        what's possible.
+      </p>
+    </div>
+
+    {groups.map((g) => (
+      <div class={`of__group of__group--${g.key}`}>
+        <h3 class="of__label">{g.label}</h3>
+        <ul class="of__grid">
+          {g.items.map((item, i) => (
+            <li class="of__item reveal" data-reveal-delay={(i % 3) * 80}>
+              <h4>{item.title}</h4>
+              <p>{item.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+
+    <p class="of__note">
+      Most of this has a smaller version. If a whole project is more than you want to take
+      on right now, ask what the smallest useful piece would be — often that's days rather
+      than weeks.
+    </p>
+  </div>
+</section>
+
+<style>
+  .of { background: var(--paper-deep); border-block: var(--edge) solid var(--ink); }
+
+  .of__head { margin-bottom: clamp(2.25rem, 4vw, 3rem); }
+  .of__h2 { font-size: var(--t-h2); margin-bottom: 0.9rem; }
+
+  .of__group + .of__group { margin-top: clamp(2.25rem, 4vw, 3rem); }
+
+  /* The label carries the "which half is this" job the two old section headings
+     used to do, so it has to read as a heading rather than as a caption. */
+  .of__label {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    letter-spacing: -0.03em;
+    /* The second label wraps to two lines on a phone. It happens to break
+       evenly at the current wording; balance keeps that true if it's reworded. */
+    text-wrap: balance;
+    padding-bottom: 0.8rem;
+    margin-bottom: 1.5rem;
+    border-bottom: var(--edge) solid color-mix(in srgb, var(--ink) 25%, transparent);
+  }
+
+  .of__grid { display: grid; gap: 1.5rem; }
+
+  .of__item {
+    background: var(--paper-pale);
+    border: var(--edge) solid var(--ink);
+    border-radius: var(--r);
+    padding: 1.4rem 1.35rem 1.5rem;
+    border-left: 6px solid var(--orange);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  /* Positional, like every other card grid on the page: each group of three runs
+     orange → grape → jade, the same order the hero plates and the process steps use. */
+  .of__item:nth-child(3n + 2) { border-left-color: var(--grape); }
+  .of__item:nth-child(3n + 3) { border-left-color: var(--jade); }
+  .of__item:hover { transform: translate3d(0, -3px, 0); box-shadow: 5px 5px 0 var(--ink); }
+
+  .of__item h4 { font-size: 1.12rem; margin-bottom: 0.5rem; letter-spacing: -0.025em; }
+  .of__item p { color: var(--ink-soft); font-size: 0.95rem; line-height: 1.6; }
+
+  .of__note {
+    margin-top: clamp(2.25rem, 4vw, 3rem);
+    padding-top: 1.5rem;
+    border-top: var(--edge) solid color-mix(in srgb, var(--ink) 25%, transparent);
+    color: var(--ink-soft);
+    max-width: 62ch;
+    line-height: 1.65;
+  }
+
+  @media (min-width: 700px)  { .of__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .of__grid { grid-template-columns: repeat(3, 1fr); } }
+</style>

@@ -19,27 +19,21 @@ const facts = [
 ];
 
 /*
- * One highlight per thing this page is selling: something built from nothing,
- * something reaching into a system that already exists, and something running
- * on its own. The third one ends with the pipeline being switched off, which is
- * the point — it is the only claim here that could not be made by someone who
- * had never had to pay for what they built.
+ * Two highlights: something reaching into a system that already exists, and
+ * something that ran on its own. The second ends with the pipeline being
+ * switched off, which is the point — it is the only claim here that could not
+ * be made by someone who had never had to pay for what they built.
  */
 const highlights = [
   {
-    title: 'Nothing on it has already finished',
-    body:
-      'A listings site is only worth opening if you can trust what\'s on it. So events drop off when they actually end, rather than when they start — a party that kicks off at ten is still listed at one in the morning, which is exactly when someone is looking for it.',
-  },
-  {
     title: 'Paste a link, and it fills itself in',
     body:
-      'Organisers give it a link to their Instagram post. It goes and reads the post, works out the name, the date, the place and the picture, and puts them in the form. They check it and press submit. Ten minutes becomes one, and that\'s the difference between people using it and people giving up.',
+      'Organisers paste a link to their Instagram post. It reads the post, works out the name, date, place and picture, and fills in the form. Ten minutes becomes one.',
   },
   {
     title: 'It went looking for events by itself',
     body:
-      'Twice a day it went out on its own, found events nobody had posted yet, sorted the real ones from the noise, and queued them for me to approve before anything went live. It worked. I switched it off anyway, because it cost more to run than it was earning. Knowing when to turn something off is part of the job.',
+      'Twice a day it found events nobody had posted and queued the real ones for me to approve. It worked. I switched it off anyway: it cost more to run than it earned. Knowing when to turn something off is part of the job.',
   },
 ];
 ---
@@ -54,14 +48,12 @@ const highlights = [
         <p class="wk__tag">A real website, built by me, running right now</p>
 
         <p class="wk__body">
-          It answers one question: what's on tonight? People use it to find parties and
-          events near them — pick your city, see what's happening, tap through for the
-          details. It's built for a phone, because that's what you're holding when you're
-          deciding where to go.
+          It answers one question: what's on tonight? Pick your city, see what's happening,
+          tap through for details. Built for a phone, because that's what you're holding.
         </p>
         <p class="wk__body">
-          I had the idea, drew it, built it, and put it online. Nobody else was
-          involved, and it has been running ever since.
+          I had the idea, drew it, built it, put it online, and still run it. That's what
+          I'd be doing for you.
         </p>
 
         <div class="wk__cta">
@@ -116,7 +108,7 @@ const highlights = [
       ))}
     </ul>
 
-    <h3 class="wk__sub">Three things I had to work out</h3>
+    <h3 class="wk__sub">Two things I had to work out</h3>
     <div class="wk__grid">
       {highlights.map((h, i) => (
         <article class="wk__hl reveal" data-reveal-delay={i * 90}>
@@ -126,12 +118,6 @@ const highlights = [
       ))}
     </div>
 
-    <p class="wk__closing">
-      That's the point of showing you this. Not the site itself — the fact that one
-      person took it from an idea to something real people use, wired it into services
-      it doesn't control, taught it to do work on its own, and still keeps the whole lot
-      running. That's what I'd be doing for you, whichever half you need.
-    </p>
   </div>
 </section>
 
@@ -225,25 +211,14 @@ const highlights = [
     border-top: 4px solid var(--orange);
   }
   /* Positional, like every other card grid on the page, so the row always reads
-     orange → grape → jade however the cards are ordered. */
-  .wk__hl:nth-child(3n + 2) { border-top-color: var(--grape); }
-  .wk__hl:nth-child(3n + 3) { border-top-color: var(--jade); }
+     orange → jade however the cards are ordered. */
+  .wk__hl:nth-child(2n) { border-top-color: var(--jade); }
   .wk__hl h4 { font-size: var(--t-h3); margin-bottom: 0.85rem; }
   .wk__hl p { color: var(--on-ink); font-size: 0.97rem; line-height: 1.65; }
-
-  .wk__closing {
-    margin-top: clamp(2.5rem, 5vw, 3.5rem);
-    color: var(--on-ink);
-    font-size: var(--t-lead);
-    line-height: 1.6;
-    max-width: 62ch;
-    padding-left: 1.25rem;
-    border-left: 4px solid var(--jade);
-  }
 
   @media (min-width: 900px) {
     .wk__top { grid-template-columns: 1.15fr 0.85fr; }
     .wk__facts { grid-template-columns: repeat(4, 1fr); }
-    .wk__grid { grid-template-columns: repeat(3, 1fr); }
+    .wk__grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
