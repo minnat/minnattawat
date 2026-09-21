@@ -47,7 +47,10 @@ const groups = [
     <p class="eyebrow">What I do</p>
 
     <div class="of__head">
-      <h2 class="of__h2">It might be a website. It might not.</h2>
+      {/* Each sentence is kept whole, so the heading is one line where both fit and
+         breaks between them where they don't. Left alone, balancing splits it on a
+         phone as "It might be a / website. It might not." */}
+      <h2 class="of__h2"><span>It might be a website.</span> <span>It might not.</span></h2>
       <p class="lead">
         Tell me what you've got and I'll say straight away what's possible.
       </p>
@@ -80,6 +83,7 @@ const groups = [
 
   .of__head { margin-bottom: clamp(2.25rem, 4vw, 3rem); }
   .of__h2 { font-size: var(--t-h2); margin-bottom: 0.9rem; }
+  .of__h2 span { white-space: nowrap; }
 
   .of__group + .of__group { margin-top: clamp(2.25rem, 4vw, 3rem); }
 
