@@ -18,30 +18,25 @@ import { experienceYears } from '../data/site';
       </p>
 
       {/*
-        Two lines, and the accent is the whole of the second one — the payload
-        word printed as its own plate, the same shape the page's cards use.
+        The accent is "ideas" — the visitor's idea, the same word the first
+        button asks for — printed as its own plate, the shape the page's cards use.
 
-        The second line has to be a single word. Above a 843px viewport the type
-        pins at 5.8rem while the copy column is at its narrowest (397px at the
-        900px two-column breakpoint), and any two-word payload overruns it:
-        "missing piece." measures 552px, "missing part." 513px. They wrap, and a
-        wrapped accent breaks the plate in half.
+        It has to be a single word. The plate can't wrap, and above a 843px
+        viewport the type pins at 5.8rem while the copy column is at its
+        narrowest (397px at the 900px two-column breakpoint).
       */}
       <h1 class="hero__h1">
-        I build<br />
-        <span class="hero__accent">software.</span>
+        I bring digital <span class="hero__accent">ideas</span> to life.
       </h1>
 
       <p class="hero__lead">
-        Sometimes that's a website, a shop, a way to take bookings. Just as often it's
-        the part in between — an order retyped from one system into another, or the job
-        somebody still does by hand every week. I work out what would help, build it, and
-        stay around while it runs.
+        A website, a shop, a way to take bookings — or the job somebody still does by
+        hand every week. You share the idea, I'll handle the build.
       </p>
 
       <div class="hero__cta">
         <a href="#contact" class="btn">Tell me your idea</a>
-        <a href="#work" class="btn btn--ghost">See something I made</a>
+        <a href="#work" class="btn btn--ghost">See what I made</a>
       </div>
 
       <p class="hero__foot mono">
@@ -128,7 +123,9 @@ import { experienceYears } from '../data/site';
     font-size: var(--t-mega);
     font-weight: 800;
     letter-spacing: -0.04em;
-    line-height: 1;
+    /* 1.08, not 1: the plate sits under "bring digital", and at 1 it runs into
+       the g's descender on the line above. */
+    line-height: 1.08;
     margin-bottom: 1.7rem;
   }
 
@@ -141,12 +138,24 @@ import { experienceYears } from '../data/site';
     color: var(--paper-pale);
     background: var(--orange);
     border-radius: 4px;
-    padding: 0.01em 0.1em 0.06em;
+    /* The plate is sized by its own line box, so it would otherwise grow with the
+       heading's line-height and reserve descender room "ideas" doesn't use. 0.84
+       hugs the letters; the padding puts the air back evenly. */
+    line-height: 0.84;
+    padding: 0.07em 0.1em 0.1em;
     box-shadow: 6px 6px 0 var(--grape);
   }
 
   .hero__lead { font-size: var(--t-lead); line-height: 1.55; color: var(--ink-soft); max-width: 46ch; }
   .hero__cta { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-top: 2.4rem; }
+  /* On a phone the two buttons at full size need ~350px side by side, more than
+     a 360px screen has after gutters, so they stacked. Slimmer padding and type
+     keep them on one row down to 360px; below that they still wrap rather than
+     overflow. The gap stays at full size: the first button's offset shadow eats
+     7px of it, and any less makes the pair look jammed together. */
+  @media (max-width: 480px) {
+    .hero__cta .btn { padding: 0.85rem; font-size: 0.95rem; }
+  }
   .hero__foot { margin-top: 2.4rem; color: var(--ink-faint); letter-spacing: 0.08em; }
 
   /* --- the stack --- */
@@ -261,10 +270,9 @@ import { experienceYears } from '../data/site';
   }
 
   @media (min-width: 900px) {
-    /* 1.1fr, not 1.05fr: "software." is a wider word than "websites." was, and
-       at the 900px breakpoint the copy column is the narrowest it ever gets
-       while the display type is already pinned at its maximum. The extra 5%
-       keeps the same slack the old headline had before the accent would wrap. */
+    /* 1.1fr gives the copy column slack at the 900px breakpoint, where it is
+       the narrowest it ever gets while the display type is already pinned at
+       its maximum. */
     .hero__grid { grid-template-columns: 1.1fr 0.9fr; gap: clamp(3rem, 6vw, 6rem); }
     .hero__stack { padding-block: 2rem; }
     .pl--design { margin-right: 3.5rem; }
