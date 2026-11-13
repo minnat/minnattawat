@@ -183,7 +183,7 @@ export const history = [
     period: '2026 – now',
     org: 'whereto.party',
     role: 'My own project',
-    note: 'A site for finding parties and events. My idea, built and run by me.',
+    note: 'A site for finding parties in over 100 cities. My idea, built and run by me.',
   },
   {
     period: '2023 – now',

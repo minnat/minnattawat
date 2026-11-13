@@ -5,35 +5,43 @@
  * like the thing it describes.
  *
  * Every fact here is durable on purpose. Commit counts and test numbers were
- * removed: they mean nothing to this audience and go stale in a week.
+ * removed: they mean nothing to this audience and go stale in a week. The
+ * counts that remain are rounded-down floors ("4,000+") that only grow, so they
+ * undersell over time but never become false. Visitor numbers, revenue and
+ * uptime are left out because there is nothing measured to back them.
  *
  * To use a real screenshot instead of the recreated panel: drop the image in
  * public/assets/ and replace the .wk__device block with an <img>.
  */
 
 const facts = [
-  { k: 'Started', v: 'June 2026' },
   { k: 'Online in', v: 'About 2 weeks' },
-  { k: 'Downtime', v: 'None' },
+  { k: 'Events listed', v: '4,000+' },
+  { k: 'Covers', v: '100+ cities, 25+ countries' },
   { k: 'Built by', v: 'Me, on my own' },
 ];
 
 /*
- * Two highlights: something reaching into a system that already exists, and
- * something that ran on its own. The second ends with the pipeline being
- * switched off, which is the point — it is the only claim here that could not
- * be made by someone who had never had to pay for what they built.
+ * Three highlights: something that saves a person typing, something that runs
+ * on its own, and the check that stops it publishing rubbish. The last two are
+ * the second offering ("someone reads every message that comes in") working
+ * for real, which is why the third card says so out loud.
  */
 const highlights = [
   {
     title: 'Paste a link, and it fills itself in',
     body:
-      'Organisers paste a link to their Instagram post. It reads the post, works out the name, date, place and picture, and fills in the form. Ten minutes becomes one.',
+      'Organisers paste a link to their event — an Instagram post, a ticket page. It reads it, works out the name, date, place and picture, and fills in the form. Ten minutes becomes one.',
   },
   {
-    title: 'It went looking for events by itself',
+    title: 'It goes looking for events by itself',
     body:
-      'Twice a day it found events nobody had posted and queued the real ones for me to approve. It worked. I switched it off anyway: it cost more to run than it earned. Knowing when to turn something off is part of the job.',
+      'It keeps checking more than 250 places: ticket sites, clubs\' own websites, Instagram. When the same party is listed twice, it keeps one. Most of the 4,000 events came in this way — nobody typed them in.',
+  },
+  {
+    title: 'Nothing goes live without a check',
+    body:
+      'AI reads every new listing against more than a hundred rules I wrote, and nothing goes live until it\'s approved, by the AI or by me. Over 3,500 checked so far. It\'s the same setup I\'d build to read your enquiries or invoices.',
   },
 ];
 ---
@@ -50,6 +58,10 @@ const highlights = [
         <p class="wk__body">
           It answers one question: what's on tonight? Pick your city, see what's happening,
           tap through for details. Built for a phone, because that's what you're holding.
+        </p>
+        <p class="wk__body">
+          It started with about 350 events. Three months later it lists over 4,000, and
+          most of them it found by itself.
         </p>
         <p class="wk__body">
           I had the idea, drew it, built it, put it online, and still run it. That's what
@@ -108,7 +120,7 @@ const highlights = [
       ))}
     </ul>
 
-    <h3 class="wk__sub">Two things I had to work out</h3>
+    <h3 class="wk__sub">Three things I had to work out</h3>
     <div class="wk__grid">
       {highlights.map((h, i) => (
         <article class="wk__hl reveal" data-reveal-delay={i * 90}>
@@ -211,14 +223,17 @@ const highlights = [
     border-top: 4px solid var(--orange);
   }
   /* Positional, like every other card grid on the page, so the row always reads
-     orange → jade however the cards are ordered. */
-  .wk__hl:nth-child(2n) { border-top-color: var(--jade); }
+     orange → grape → jade however the cards are ordered. */
+  .wk__hl:nth-child(3n + 2) { border-top-color: var(--grape); }
+  .wk__hl:nth-child(3n + 3) { border-top-color: var(--jade); }
   .wk__hl h4 { font-size: var(--t-h3); margin-bottom: 0.85rem; }
   .wk__hl p { color: var(--on-ink); font-size: 0.97rem; line-height: 1.65; }
 
   @media (min-width: 900px) {
     .wk__top { grid-template-columns: 1.15fr 0.85fr; }
     .wk__facts { grid-template-columns: repeat(4, 1fr); }
-    .wk__grid { grid-template-columns: repeat(2, 1fr); }
   }
+  /* Same breakpoints as the Offer grid: three cards side by side need the room. */
+  @media (min-width: 700px)  { .wk__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .wk__grid { grid-template-columns: repeat(3, 1fr); } }
 </style>
